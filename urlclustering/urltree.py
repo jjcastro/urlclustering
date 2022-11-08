@@ -13,6 +13,7 @@ class URLTreeNode(dict):
     REDUCED_NUM_LITERAL = '(\d+)'
     REDUCED_PATH_LITERAL = '([^/]+)'
     REDUCED_PARAM_LITERAL = '([^&=?]+)'
+    REDUCED_COUNTRY_LITERAL = '([a-z]{2}|[A-Z]{2})'
 
     def __init__(self, iterable=(), r='', h='', reductions=0):
         self.r = r  # regular expression so far
@@ -43,6 +44,8 @@ class URLTreeNode(dict):
         """Return regex and human readable expressions"""
         if re.search(r'^\d+$', elem):
             return URLTreeNode.REDUCED_NUM_LITERAL, '[NUMBER]'
+        elif re.search(r'^([a-z]{2}|[A-Z]{2})$', elem.upper()):
+          return URLTreeNode.REDUCED_COUNTRY_LITERAL, '[COUNTRY]'
         elif separator == '/':
             return URLTreeNode.REDUCED_PATH_LITERAL, '[...]'
         else:
